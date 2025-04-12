@@ -5,6 +5,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { generateInstrumental, generateVocals } from "./lib/openai";
+import { generateLyrics } from "./lib/lyrics-generator";
 import { 
   insertProjectSchema,
   insertTrackSchema,
