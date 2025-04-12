@@ -1,8 +1,6 @@
 import { VoiceModel } from "@shared/schema";
 import fs from "fs";
 import path from "path";
-import * as Tone from "tone";
-import { createDrumPattern, createMetronome } from "../lib/tone-generator";
 
 // Local alternatives to OpenAI - this uses JavaScript audio APIs
 

@@ -19,8 +19,13 @@ export default function LyricsEditor({ projectId, track }: LyricsEditorProps) {
 
   // Load lyrics from track if available
   useEffect(() => {
-    if (track && track.settings && track.settings.lyrics) {
-      setLyrics(track.settings.lyrics as string);
+    if (track && track.settings && typeof track.settings === 'object') {
+      const settings = track.settings as Record<string, any>;
+      if (settings.lyrics && typeof settings.lyrics === 'string') {
+        setLyrics(settings.lyrics);
+      } else {
+        setLyrics("");
+      }
     } else {
       setLyrics("");
     }
@@ -30,8 +35,13 @@ export default function LyricsEditor({ projectId, track }: LyricsEditorProps) {
     if (!track) return;
 
     try {
+      // Safely handle settings object
+      const currentSettings = track.settings && typeof track.settings === 'object' 
+        ? track.settings as Record<string, any>
+        : {};
+        
       const updatedSettings = {
-        ...track.settings,
+        ...currentSettings,
         lyrics
       };
 
@@ -108,8 +118,12 @@ Finding myself, finding you`;
         description: "This may take a few moments...",
       });
       
-      // Get the selected voice model ID from the project settings or use default
-      const voiceModelId = track.settings?.voiceModelId || 1;
+      // Get the selected voice model ID from the track settings or use default
+      const settings = track.settings && typeof track.settings === 'object'
+        ? track.settings as Record<string, any>
+        : {};
+        
+      const voiceModelId = settings.voiceModelId || 1;
       
       // Call our local generation API
       const response = await apiRequest("POST", "/api/generate/vocals", {
@@ -126,9 +140,13 @@ Finding myself, finding you`;
       const { audioUrl } = await response.json();
       
       // Update the track with the new vocal audio
+      const currentSettings = track.settings && typeof track.settings === 'object'
+        ? track.settings as Record<string, any>
+        : {};
+        
       await apiRequest("PUT", `/api/tracks/${track.id}`, {
         settings: {
-          ...track.settings,
+          ...currentSettings,
           lyrics
         },
         audioUrl

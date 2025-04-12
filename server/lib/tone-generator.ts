@@ -50,7 +50,6 @@ export function createDrumPattern(bpm: number = 120, pattern: number[][] = [[0, 
     envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
   }).toDestination();
   const hihat = new Tone.MetalSynth({
-    frequency: 200,
     envelope: { attack: 0.001, decay: 0.1, release: 0.01 },
     harmonicity: 5.1,
     modulationIndex: 32,
