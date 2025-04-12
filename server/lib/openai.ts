@@ -116,10 +116,26 @@ export async function generateInstrumental(params: InstrumentalGenerationParams)
 /**
  * Generates vocal audio from lyrics using OpenAI
  */
+import { synthesize, enhanceVoice } from './coqui';
+
 export async function generateVocals(params: VocalGenerationParams): Promise<string> {
   console.log("Generating vocals with params:", params);
   
   const { lyrics, voiceModel, settings } = params;
+
+  // First synthesize the vocals using Coqui TTS
+  const synthesisResponse = await synthesize(lyrics, voiceModel.id, {
+    character: settings.character,
+    clarity: settings.clarity,
+    emotion: settings.emotion,
+    style: settings.style
+  });
+
+  // Enhance the synthesized audio using GAN
+  const enhancedResponse = await enhanceVoice(synthesisResponse.data.audio_url, {
+    clarity: settings.clarity,
+    character: settings.character
+  });
   
   try {
     // Create a filename for the generated audio
