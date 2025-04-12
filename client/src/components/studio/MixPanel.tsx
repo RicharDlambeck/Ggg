@@ -515,7 +515,7 @@ export default function MixPanel({ vocalTrackUrl, instrumentalTrackUrl, onSaveTr
   };
   
   // Convert AudioBuffer to WAV blob
-  const bufferToWav = (buffer: AudioBuffer): Blob => {
+  const bufferToWav = (buffer: any): Blob => {
     // Get buffers (Float32Arrays)
     const numberOfChannels = buffer.numberOfChannels;
     const length = buffer.length * numberOfChannels * 2;
@@ -627,7 +627,7 @@ export default function MixPanel({ vocalTrackUrl, instrumentalTrackUrl, onSaveTr
               </div>
               
               <div className="flex items-center gap-2">
-                <SpeakerLoud size={16} />
+                <Volume2 size={16} />
                 <Slider
                   value={[masterVolume]}
                   min={0}

@@ -8,6 +8,8 @@ import { Mic, Music, PenTool, Wand } from 'lucide-react';
 import VoiceModelSelector from './VoiceModelSelector';
 import VoiceModelCreator from './VoiceModelCreator';
 import LyricsGenerator from './LyricsGenerator';
+import MixPanel from './MixPanel';
+import InstrumentalGenerator from './InstrumentalGenerator';
 import { VoiceModel as BaseVoiceModel } from '@shared/schema';
 import axios from 'axios';
 
@@ -22,6 +24,8 @@ export default function VoiceCloneStudio() {
   const [showVoiceCreator, setShowVoiceCreator] = useState<boolean>(false);
   const [lyrics, setLyrics] = useState<string>('');
   const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null);
+  const [instrumentalUrl, setInstrumentalUrl] = useState<string | null>(null);
+  const [showInstrumentalGenerator, setShowInstrumentalGenerator] = useState<boolean>(false);
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   
   const { toast } = useToast();
@@ -267,12 +271,60 @@ export default function VoiceCloneStudio() {
               </TabsContent>
               
               <TabsContent value="mix" className="mt-0">
-                <div className="text-center p-8">
-                  <h3 className="text-lg font-medium mb-2">Coming Soon</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Advanced mixing features will be available in future updates.
-                  </p>
-                </div>
+                {generatedAudioUrl ? (
+                  <div className="space-y-6">
+                    {!instrumentalUrl && (
+                      <div className="flex flex-col items-center mb-6 p-4 border rounded-md">
+                        <p className="mb-4">Add a backing track to your vocals for a complete song.</p>
+                        <Button onClick={() => setShowInstrumentalGenerator(true)}>
+                          Generate Instrumental
+                        </Button>
+                      </div>
+                    )}
+                    
+                    {instrumentalUrl && (
+                      <div className="mb-6 p-4 border rounded-md">
+                        <h3 className="font-medium mb-2">Instrumental Track</h3>
+                        <audio 
+                          controls 
+                          src={instrumentalUrl} 
+                          className="w-full mb-2"
+                        />
+                        <div className="flex justify-end">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowInstrumentalGenerator(true)}
+                          >
+                            Change Instrumental
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    <MixPanel 
+                      vocalTrackUrl={generatedAudioUrl} 
+                      instrumentalTrackUrl={instrumentalUrl}
+                      onSaveTrack={(mixedUrl) => {
+                        window.open(mixedUrl, '_blank');
+                        toast({
+                          title: "Mix Exported",
+                          description: "Your mixed track has been exported successfully!",
+                        });
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="text-center p-8">
+                    <h3 className="text-lg font-medium mb-2">No Vocals Generated</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Generate vocals first to use the mixing features.
+                    </p>
+                    <Button onClick={() => setActiveTab('generate')}>
+                      Go to Vocal Generation
+                    </Button>
+                  </div>
+                )}
               </TabsContent>
             </CardContent>
           </Card>
@@ -290,6 +342,27 @@ export default function VoiceCloneStudio() {
           </DialogHeader>
           
           <VoiceModelCreator />
+        </DialogContent>
+      </Dialog>
+      
+      {/* Instrumental Generator Dialog */}
+      <Dialog open={showInstrumentalGenerator} onOpenChange={setShowInstrumentalGenerator}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Generate Instrumental</DialogTitle>
+            <DialogDescription>
+              Create a backing track for your vocals by customizing the genre, mood, and other properties.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <InstrumentalGenerator onGenerated={(url) => {
+            setInstrumentalUrl(url);
+            setShowInstrumentalGenerator(false);
+            toast({
+              title: 'Instrumental Generated',
+              description: 'Backing track has been generated successfully!'
+            });
+          }} />
         </DialogContent>
       </Dialog>
     </div>
