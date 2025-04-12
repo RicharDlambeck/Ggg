@@ -5,8 +5,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MicIcon, UserIcon, PlusCircleIcon, PlayIcon, StarIcon as StarFilledIcon } from 'lucide-react';
-import { VoiceModel } from '@shared/schema';
+import { VoiceModel as BaseVoiceModel } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
+
+// Type-safe extension of VoiceModel to handle audioSamples properly
+interface VoiceModel extends BaseVoiceModel {
+  audioSamples: string[] | null;
+}
 
 interface VoiceModelSelectorProps {
   onSelectModel: (model: VoiceModel) => void;
@@ -145,6 +150,27 @@ function VoiceModelCard({
   onSelect,
   onPlaySample
 }: VoiceModelCardProps) {
+  // Helper function to safely access and validate audioSamples
+  const getSampleUrl = (): string | null => {
+    if (!model.audioSamples) return null;
+    
+    // Handle case when audioSamples is an array of strings
+    if (Array.isArray(model.audioSamples) && model.audioSamples.length > 0) {
+      const firstSample = model.audioSamples[0];
+      if (typeof firstSample === 'string') {
+        return firstSample;
+      }
+    }
+    
+    return null;
+  };
+  
+  // Get the first sample URL
+  const sampleUrl = getSampleUrl();
+  
+  // Check if the model has any samples
+  const hasSamples = !!sampleUrl;
+  
   return (
     <Card 
       className={`cursor-pointer transition-all hover:shadow-md ${
@@ -160,14 +186,16 @@ function VoiceModelCard({
           </div>
           
           <div className="flex gap-1">
-            {model.audioSamples && Array.isArray(model.audioSamples) && model.audioSamples.length > 0 && (
+            {hasSamples && (
               <Button
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 text-muted-foreground hover:text-foreground"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onPlaySample(model.audioSamples[0] as string);
+                  if (sampleUrl) {
+                    onPlaySample(sampleUrl);
+                  }
                 }}
               >
                 <PlayIcon size={14} />

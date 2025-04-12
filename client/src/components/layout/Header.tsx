@@ -23,24 +23,18 @@ export default function Header() {
         <nav>
           <ul className="flex gap-6">
             <li>
-              <Link href="/studio">
-                <a className={`hover:text-primary transition font-medium ${location === "/" || location === "/studio" ? "text-neutral-50" : "text-neutral-400"}`}>
-                  Studio
-                </a>
+              <Link href="/studio" className={`hover:text-primary transition font-medium ${location === "/" || location === "/studio" ? "text-neutral-50" : "text-neutral-400"}`}>
+                Studio
               </Link>
             </li>
             <li>
-              <Link href="/library">
-                <a className={`hover:text-primary transition ${location === "/library" ? "text-neutral-50 font-medium" : "text-neutral-400"}`}>
-                  Library
-                </a>
+              <Link href="/library" className={`hover:text-primary transition ${location === "/library" ? "text-neutral-50 font-medium" : "text-neutral-400"}`}>
+                Library
               </Link>
             </li>
             <li>
-              <Link href="/learn">
-                <a className={`hover:text-primary transition ${location === "/learn" ? "text-neutral-50 font-medium" : "text-neutral-400"}`}>
-                  Learn
-                </a>
+              <Link href="/learn" className={`hover:text-primary transition ${location === "/learn" ? "text-neutral-50 font-medium" : "text-neutral-400"}`}>
+                Learn
               </Link>
             </li>
           </ul>

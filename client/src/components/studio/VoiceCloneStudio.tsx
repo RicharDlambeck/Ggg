@@ -8,8 +8,13 @@ import { Mic, Music, PenTool, Wand } from 'lucide-react';
 import VoiceModelSelector from './VoiceModelSelector';
 import VoiceModelCreator from './VoiceModelCreator';
 import LyricsGenerator from './LyricsGenerator';
-import { VoiceModel } from '@shared/schema';
+import { VoiceModel as BaseVoiceModel } from '@shared/schema';
 import axios from 'axios';
+
+// Type-safe extension of VoiceModel
+interface VoiceModel extends BaseVoiceModel {
+  audioSamples: string[] | null;
+}
 
 export default function VoiceCloneStudio() {
   const [activeTab, setActiveTab] = useState<string>('voice-models');
