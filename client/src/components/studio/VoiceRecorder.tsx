@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import RecordRTC from 'recordrtc';
 import { Button } from '@/components/ui/button';
-import { MicIcon, StopIcon, TrashIcon, SaveIcon } from 'lucide-react';
+import { Mic as MicIcon, StopCircle as StopIcon, Trash as TrashIcon, Save as SaveIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { createWaveformPath, normalizeAmplitudes } from '@/lib/audio-processing';
 

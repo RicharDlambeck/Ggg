@@ -8,6 +8,7 @@ import LyricsEditor from "@/components/studio/LyricsEditor";
 import VocalPreview from "@/components/studio/VocalPreview";
 import InstrumentalLab from "@/components/studio/InstrumentalLab";
 import MixPanel from "@/components/studio/MixPanel";
+import VoiceCloneStudio from "@/components/studio/VoiceCloneStudio";
 import { Play, Save, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/api";
@@ -78,16 +79,7 @@ export default function Studio() {
           
           <div className="flex-1 overflow-auto p-6">
             <TabsContent value="vocal-studio" className="h-full mt-0 border-none p-0">
-              <div className="flex gap-6 h-full">
-                <VoiceModelSection />
-                <div className="w-2/3 flex flex-col">
-                  <LyricsEditor 
-                    projectId={project.id} 
-                    track={selectedTrack?.type === "vocal" ? selectedTrack : null} 
-                  />
-                  <VocalPreview track={selectedTrack?.type === "vocal" ? selectedTrack : null} />
-                </div>
-              </div>
+              <VoiceCloneStudio />
             </TabsContent>
             
             <TabsContent value="instrumental-lab" className="h-full mt-0 border-none p-0">

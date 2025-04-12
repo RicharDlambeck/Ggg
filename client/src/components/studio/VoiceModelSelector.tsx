@@ -23,7 +23,7 @@ export default function VoiceModelSelector({
   const { toast } = useToast();
   
   // Fetch voice models
-  const { data: voiceModels, isLoading, error } = useQuery({
+  const { data: voiceModels = [], isLoading, error } = useQuery<VoiceModel[]>({
     queryKey: ['/api/voice-models'],
     staleTime: 60 * 1000, // 1 minute
   });
@@ -51,13 +51,13 @@ export default function VoiceModelSelector({
   }
   
   // Filter models by type
-  const featuredModels = voiceModels?.filter((model: VoiceModel) => 
+  const featuredModels = voiceModels.filter((model: VoiceModel) => 
     model.userId === 0 || (model.isPublic && model.userId !== 1)
-  ) || [];
+  );
   
-  const myModels = voiceModels?.filter((model: VoiceModel) => 
+  const myModels = voiceModels.filter((model: VoiceModel) => 
     model.userId === 1
-  ) || [];
+  );
   
   return (
     <div className="w-full flex flex-col h-full">
@@ -160,7 +160,7 @@ function VoiceModelCard({
           </div>
           
           <div className="flex gap-1">
-            {model.audioSamples && model.audioSamples.length > 0 && (
+            {model.audioSamples && Array.isArray(model.audioSamples) && model.audioSamples.length > 0 && (
               <Button
                 variant="ghost"
                 size="icon"

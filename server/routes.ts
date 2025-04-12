@@ -266,6 +266,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to generate vocals", error: (error as Error).message });
     }
   });
+  
+  app.post("/api/generate/lyrics", async (req: Request, res: Response) => {
+    try {
+      const { prompt, style, mood, theme, advancedOptions } = req.body;
+      
+      // Generate lyrics using OpenAI
+      const lyrics = await generateLyrics({
+        prompt,
+        style,
+        mood,
+        theme,
+        advancedOptions
+      });
+      
+      res.json({ lyrics });
+    } catch (error) {
+      console.error("Error generating lyrics:", error);
+      res.status(500).json({ message: "Failed to generate lyrics", error: (error as Error).message });
+    }
+  });
 
   // ===== Audio File Serving =====
   app.get("/api/audio/:filename", (req, res) => {
