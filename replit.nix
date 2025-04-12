@@ -1,5 +1,31 @@
 {pkgs}: {
   deps = [
+    pkgs.python311Packages.flask-limiter
+    pkgs.python312Packages.flask-marshmallow
+    pkgs.python311Packages.flask-paranoid
+    pkgs.python311Packages.flask-expects-json
+    pkgs.python312Packages.flask-paginate
+    pkgs.python312Packages.flask-cors
+    pkgs.python311Packages.flask-babelex
+    pkgs.python312Packages.flask-silk
+    pkgs.python312Packages.flask-login
+    pkgs.python312Packages.flask-mail
+    pkgs.python311Packages.flask-sockets
+    pkgs.python312Packages.flask-sockets
+    pkgs.python311Packages.flask-compress
+    pkgs.python312Packages.flask-compress
+    pkgs.python311Packages.allure-behave
+    pkgs.libsForQt5.alligator
+    pkgs.python312Packages.allpairspy
+    pkgs.python311Packages.allpairspy
+    pkgs.python312Packages.allure-pytest
+    pkgs.python312Packages.allure-python-commons-test
+    pkgs.python312Packages.allure-python-commons
+    pkgs.python311Packages.pixel-ring
+    pkgs.python311Packages.aionanoleaf
+    pkgs.libcardiacarrest
+    pkgs.cudaPackages.cuda_nvprof
+    pkgs.rPackages.AllPossibleSpellings
     pkgs.libsndfile
     pkgs.nano
   ];
