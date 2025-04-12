@@ -5,7 +5,12 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { generateInstrumental, generateVocals } from "./lib/openai";
-import { generateLyrics } from "./lib/lyrics-generator";
+import { 
+  generateLyrics,
+  generateStructuredLyrics,
+  getLyricSuggestions,
+  findRhymes
+} from "./lib/lyrics-generator";
 import { 
   insertProjectSchema,
   insertTrackSchema,
@@ -284,6 +289,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error generating lyrics:", error);
       res.status(500).json({ message: "Failed to generate lyrics", error: (error as Error).message });
+    }
+  });
+  
+  // Generate structured lyrics with sections
+  app.post("/api/generate/structured-lyrics", async (req: Request, res: Response) => {
+    try {
+      const { prompt, style, mood, theme, advancedOptions } = req.body;
+      
+      // Validate the input
+      if (!style || !mood) {
+        return res.status(400).json({ message: "Style and mood are required" });
+      }
+      
+      // Generate structured lyrics with sections
+      const structuredLyrics = await generateStructuredLyrics({
+        prompt,
+        style,
+        mood,
+        theme,
+        advancedOptions
+      });
+      
+      res.json(structuredLyrics);
+    } catch (error) {
+      console.error("Error generating structured lyrics:", error);
+      res.status(500).json({ message: "Failed to generate structured lyrics", error: (error as Error).message });
+    }
+  });
+  
+  // Get alternate suggestions for specific lyric lines
+  app.post("/api/lyrics/suggestions", async (req: Request, res: Response) => {
+    try {
+      const { line, fullLyrics, style, count } = req.body;
+      
+      // Validate the input
+      if (!line || !fullLyrics || !style) {
+        return res.status(400).json({ 
+          message: "Line, full lyrics, and style are required" 
+        });
+      }
+      
+      // Get alternative suggestions
+      const suggestions = await getLyricSuggestions(
+        line,
+        fullLyrics,
+        style,
+        count || 3
+      );
+      
+      res.json(suggestions);
+    } catch (error) {
+      console.error("Error generating lyric suggestions:", error);
+      res.status(500).json({ message: "Failed to generate lyric suggestions", error: (error as Error).message });
+    }
+  });
+  
+  // Find rhymes for a given word
+  app.post("/api/lyrics/rhymes", async (req: Request, res: Response) => {
+    try {
+      const { word, style } = req.body;
+      
+      // Validate the input
+      if (!word || !style) {
+        return res.status(400).json({ message: "Word and style are required" });
+      }
+      
+      // Get rhyming words
+      const rhymes = await findRhymes(word, style);
+      
+      res.json(rhymes);
+    } catch (error) {
+      console.error("Error finding rhymes:", error);
+      res.status(500).json({ message: "Failed to find rhymes", error: (error as Error).message });
     }
   });
 
